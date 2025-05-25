@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>クーポン引き換えフォーム</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-image: url('mJ-TKrKLSamh2ethu6Xa-Q.png');
+            background-size: 98%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 290px;
+            text-align: center;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+
+            position: absolute;
+            top: 75%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        h1 {
+            color: #388E3C;
+            margin-bottom: 15px;
+            font-size: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        p {
+            color: #555;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.85em;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 13px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            outline: none;
+        }
+        input[type="text"]:focus {
+            border-color: #e67e22;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+        }
+        button {
+            background-color: #e67e22;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            width: 100%;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #d35400;
+            transform: translateY(-2px);
+        }
+        button:disabled { /* 送信中のボタンのスタイル */
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #28a745;
+            background-color: #e6ffe6;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #28a745;
+            font-size: 0.85em;
+            display: none;
+        }
+        .error-message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #dc3545;
+            background-color: #ffe6e6;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #dc3545;
+            font-size: 0.85em;
+            display: none;
+        }
+
+        /* クーポン画像表示用のスタイル */
+        .coupon-display {
+            margin-top: 20px;
+            text-align: center;
+            display: none; /* 初期状態では非表示 */
+        }
+        .coupon-display img {
+            max-width: 90%; /* コンテナの幅に合わせて画像を調整 */
+            height: auto; /* アスペクト比を維持 */
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* レスポンシブデザインの調整 */
+        @media (max-width: 600px) {
+            body {
+                background-size: 100% 100%; /* 画像を上下左右に引き伸ばして画面いっぱいに表示 */
+            }
+            .container {
+                padding: 15px;
+                width: calc(100% - 30px); /* 画面幅から左右15pxずつ(合計30px)の余白を引く */
+                max-width: 200px;
+                top: 70%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+            h1 {
+                font-size: 18px;
+            }
+            p {
+                font-size: 0.8em;
+            }
+            label {
+                font-size: 0.85em;
+            }
+            input[type="text"] {
+                padding: 8px;
+                font-size: 12px;
+            }
+            button {
+                font-size: 14px;
+                padding: 10px 15px;
+            }
+            .message, .error-message {
+                font-size: 0.8em;
+                padding: 10px;
+            }
+            .coupon-display img {
+                max-width: 100%; /* スマホでは幅いっぱいに表示 */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>クーポン引き換えフォーム</h1>
+        <p>名前と住所を入力してクーポンを引き換えてください。</p>
+        <form id="couponForm">
+            <div class="form-group">
+                <label for="name">お名前:</label>
+                <input type="text" id="name" name="name" required maxlength="50" placeholder="例: 山田 太郎"
+                       title="お名前は50文字以内で入力してください。">
+                </div>
+            <div class="form-group">
+                <label for="address">ご住所:</label>
+                <input type="text" id="address" name="address" required maxlength="150" placeholder="例: 東京都新宿区1-2-3"
+                       title="ご住所は150文字以内で入力してください。">
+                </div>
+            <button type="submit" id="submitButton">送信してクーポンを受け取る</button>
+        </form>
+        <p class="message" id="successMessage">ご登録ありがとうございます！クーポンが有効になりました。</p>
+
+        <div class="coupon-display" id="couponDisplayArea">
+            <p>こちらがあなたのクーポンです！</p>
+            <img src="xOFuiateRsK0x9s5Ow2jLQ.png" alt="クーポン画像">
+        </div>
+
+        <p class="error-message" id="errorMessage"></p>
+    </div>
+
+    <script>
+        document.getElementById('couponForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // フォームのデフォルト送信を防ぐ
+
+            const name = document.getElementById('name').value;
+            const address = document.getElementById('address').value;
+            const successMessage = document.getElementById('successMessage');
+            const errorMessage = document.getElementById('errorMessage');
+            const couponForm = document.getElementById('couponForm');
+            const couponDisplayArea = document.getElementById('couponDisplayArea');
+            const submitButton = document.getElementById('submitButton'); // ボタン要素を取得
+
+            // エラーメッセージとクーポン表示エリアをリセット
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            couponDisplayArea.style.display = 'none';
+
+            // ★ 送信ボタンを無効化し、ユーザーに処理中であることを示す ★
+            submitButton.disabled = true;
+            submitButton.textContent = '送信中...';
+
+            google.script.run
+                .withSuccessHandler(function(response) {
+                    // 成功時の処理
+                    if (response.status === 'success') {
+                        successMessage.style.display = 'block';
+                        couponDisplayArea.style.display = 'block'; // 成功時にクーポン画像を表示
+                        couponForm.style.display = 'none'; // フォームを非表示にする
+                    } else {
+                        // GAS側からエラーメッセージが返された場合
+                        errorMessage.textContent = 'エラーが発生しました: ' + response.message;
+                        errorMessage.style.display = 'block';
+                        // フォームとボタンの状態を戻す
+                        couponForm.style.display = 'block';
+                        submitButton.disabled = false;
+                        submitButton.textContent = '送信してクーポンを受け取る';
+                    }
+                })
+                .withFailureHandler(function(error) {
+                    // 失敗時の処理（ネットワークエラーなど、GAS関数が呼び出せない場合）
+                    errorMessage.textContent = '送信中にエラーが発生しました。もう一度お試しください。' + error.message;
+                    errorMessage.style.display = 'block';
+                    // フォームとボタンの状態を戻す
+                    couponForm.style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.textContent = '送信してクーポンを受け取る';
+                })
+                .doPost({ name: name, address: address }); // GASのdoPost関数を呼び出す
+        });
+    </script>
+</body>
+</html>
